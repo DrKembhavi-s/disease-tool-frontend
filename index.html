@@ -70,13 +70,15 @@ async function searchDisease() {
     <div class="card"><h2>WHO Prevalence Trend</h2><canvas id="prevChart"></canvas></div>
     <div class="card"><h2>WHO Mortality Trend</h2><canvas id="mortChart"></canvas></div>
     <div class="card"><h2>WHO Global DALYs Trend</h2><canvas id="dalyChart"></canvas></div>
+    <div class="card"><h2>WHO Regional Breakdown</h2><canvas id="regionChart"></canvas></div>
+    <div class="card"><h2>WHO Age & Sex Distribution</h2><canvas id="ageSexChart"></canvas></div>
   `;
 
   renderCharts(data.statistics || {});
 }
 
 function renderCharts(stats = {}) {
-  const { prevalence_trend = [], mortality_trend = [], dalys_trend = [] } = stats;
+  const { prevalence_trend = [], mortality_trend = [], dalys_trend = [], region_data = [], age_sex_data = [] } = stats;
 
   if (prevalence_trend.length) {
     new Chart(document.getElementById("prevChart"), {
@@ -118,6 +120,40 @@ function renderCharts(stats = {}) {
           borderColor: "lightgreen",
           fill: false
         }]
+      }
+    });
+  }
+
+  if (region_data.length) {
+    new Chart(document.getElementById("regionChart"), {
+      type: 'bar',
+      data: {
+        labels: region_data.map(r => r.region),
+        datasets: [{
+          label: "WHO Regional Data",
+          data: region_data.map(r => r.value),
+          backgroundColor: "purple"
+        }]
+      }
+    });
+  }
+
+  if (age_sex_data.length) {
+    const labels = age_sex_data.map(a => `${a.age_group} (${a.sex})`);
+    const values = age_sex_data.map(a => a.value);
+
+    new Chart(document.getElementById("ageSexChart"), {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "WHO Age & Sex Distribution",
+          data: values,
+          backgroundColor: "skyblue"
+        }]
+      },
+      options: {
+        indexAxis: 'y'
       }
     });
   }
