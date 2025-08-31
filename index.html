@@ -37,7 +37,10 @@
   <footer>
     <h3>Disclaimer</h3>
     <p>
-      This tool is for educational and research purposes only. The data is aggregated from public sources (Wikipedia, PubMed, DHARA, CTRI, WHO). It is not intended as medical advice. Always consult a qualified healthcare provider before making medical decisions.
+      This tool is for educational and research purposes only.  
+      Data is aggregated from public sources (Wikipedia, PubMed, DHARA, CTRI, WHO).  
+      It is not intended as medical advice.  
+      Always consult a qualified healthcare provider before making medical decisions.
     </p>
   </footer>
 
@@ -64,11 +67,9 @@ async function searchDisease() {
     <div class="card"><h2>PubMed Research</h2><ul>${
       (data.pubmed || []).map(l => `<li><a href="${l}" target="_blank">${l}</a></li>`).join("")
     }</ul></div>
-    <div class="card"><h2>Statistics</h2>
-      <canvas id="prevChart"></canvas>
-      <canvas id="mortChart"></canvas>
-      <canvas id="dalyChart"></canvas>
-    </div>
+    <div class="card"><h2>WHO Prevalence Trend</h2><canvas id="prevChart"></canvas></div>
+    <div class="card"><h2>WHO Mortality Trend</h2><canvas id="mortChart"></canvas></div>
+    <div class="card"><h2>WHO Global DALYs Trend</h2><canvas id="dalyChart"></canvas></div>
   `;
 
   renderCharts(data.statistics || {});
@@ -82,7 +83,12 @@ function renderCharts(stats = {}) {
       type: 'line',
       data: {
         labels: prevalence_trend.map(e => e.year),
-        datasets: [{ label: "Prevalence", data: prevalence_trend.map(e => e.cases), borderColor: "cyan", fill: false }]
+        datasets: [{
+          label: "WHO Reported Prevalence",
+          data: prevalence_trend.map(e => e.cases),
+          borderColor: "cyan",
+          fill: false
+        }]
       }
     });
   }
@@ -92,7 +98,11 @@ function renderCharts(stats = {}) {
       type: 'bar',
       data: {
         labels: mortality_trend.map(e => e.year),
-        datasets: [{ label: "Deaths", data: mortality_trend.map(e => e.deaths), backgroundColor: "orange" }]
+        datasets: [{
+          label: "WHO Reported Mortality",
+          data: mortality_trend.map(e => e.deaths),
+          backgroundColor: "orange"
+        }]
       }
     });
   }
@@ -102,7 +112,12 @@ function renderCharts(stats = {}) {
       type: 'line',
       data: {
         labels: dalys_trend.map(e => e.year),
-        datasets: [{ label: "DALYs", data: dalys_trend.map(e => e.dalys), borderColor: "lightgreen", fill: false }]
+        datasets: [{
+          label: "WHO Reported DALYs",
+          data: dalys_trend.map(e => e.dalys),
+          borderColor: "lightgreen",
+          fill: false
+        }]
       }
     });
   }
